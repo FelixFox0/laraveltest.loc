@@ -26,13 +26,21 @@ class UsersfileController extends Controller
         $file->url = $request->url;
         $file->path = asset('storage/app/public/' . basename($request->url));
         $file->save();
-        return response()->json($file);
+        
+        $json = $file;
+        $json->error = '';
+        return response()->json($json);
     }
 
     public function destroy($id)
     {
-        Storage::disk('public')->delete(basename(Usersfile::find($id)->path));
-        Usersfile::destroy($id);
+        $delete_file = Storage::disk('public')->delete(basename(Usersfile::find($id)->path));
+        $delete_field = Usersfile::destroy($id);
+        if($delete_file && $delete_field){
+            return 'destroy complete';
+        }else{
+            return 'destroy fail';
+        }
     }
     
 }
