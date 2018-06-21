@@ -33,7 +33,7 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr) {
-                alert(xhr.responseJSON['message']);
+                alert(xhr.responseJSON['errors']['url'][0]);
             }
         });
 

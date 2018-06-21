@@ -16,13 +16,13 @@ class UsersfileController extends Controller
     public function create(Request $request)
     {
         $rules = [
-            'url' => 'url|active_url|unique:usersfiles'
+            'url' => 'url|active_url|unique:usersfiles|Urlfile'
         ];
         $this->validate($request, $rules);
-        @file_get_contents($request->url) or ($error = 'File not found');
-        if(isset($error)){
-            $json['error'] = $error;
-        }else{
+//        @file_get_contents($request->url) or ($error = 'File not found');
+//        if(isset($error)){
+//            $json['error'] = $error;
+//        }else{
             Storage::disk('public')->put(basename($request->url), file_get_contents($request->url), 'public');
             $file = new Usersfile();
             $file->mime_type = mime_content_type(storage_path('app/public/' . basename($request->url)));
@@ -32,7 +32,7 @@ class UsersfileController extends Controller
 
             $json = $file;
             $json->error = '';
-        }
+//        }
         return response()->json($json);
     }
 
