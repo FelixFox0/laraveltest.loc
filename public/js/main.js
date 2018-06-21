@@ -21,12 +21,16 @@ $(document).ready(function() {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
             },
             success: function(json) {
-                var item = '<div class="box">';
-                item += '<a class="download" href="' + json['path'] + '" download>' +  json['url'].split('/').pop() + ' </a>';
-                item += '<a id="destroy' + json['id'] + '" class="destroy" href="/destroy/' + json['id'] + ' "> remove</a>';
-                item += '</div>';
-                $('.files').append(item);
-                alert("Complete \r\n path " + json['path'] + "\r\n mime type" + json['mime_type']);
+                if(json['error']){
+                    alert(json['error']);
+                }else{
+                    var item = '<div class="box">';
+                    item += '<a class="download" href="' + json['path'] + '" download>' +  json['url'].split('/').pop() + ' </a>';
+                    item += '<a id="destroy' + json['id'] + '" class="destroy" href="/destroy/' + json['id'] + ' "> remove</a>';
+                    item += '</div>';
+                    $('.files').append(item);
+                    alert("Complete \r\n path " + json['path'] + "\r\n mime type" + json['mime_type']);
+                }
             },
             error: function(xhr) {
                 alert(xhr.responseJSON['message']);

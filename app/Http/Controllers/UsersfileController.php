@@ -19,16 +19,20 @@ class UsersfileController extends Controller
             'url' => 'url|active_url|unique:usersfiles'
         ];
         $this->validate($request, $rules);
-        
-        Storage::disk('public')->put(basename($request->url), file_get_contents($request->url), 'public');
-        $file = new Usersfile();
-        $file->mime_type = mime_content_type(storage_path('app/public/' . basename($request->url)));
-        $file->url = $request->url;
-        $file->path = asset('storage/app/public/' . basename($request->url));
-        $file->save();
-        
-        $json = $file;
-        $json->error = '';
+        @file_get_contents($request->url) or ($error = 'File not found');
+        if(isset($error)){
+            $json['error'] = $error;
+        }else{
+            Storage::disk('public')->put(basename($request->url), file_get_contents($request->url), 'public');
+            $file = new Usersfile();
+            $file->mime_type = mime_content_type(storage_path('app/public/' . basename($request->url)));
+            $file->url = $request->url;
+            $file->path = asset('storage/app/public/' . basename($request->url));
+            $file->save();
+
+            $json = $file;
+            $json->error = '';
+        }
         return response()->json($json);
     }
 
